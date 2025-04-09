@@ -162,3 +162,41 @@ Run with `python3 ./run.py`
 ## Notworking:
     * Save / Loding Preheat setting, hardcode on start can be changed in menu but will not retane on restart.
     * The Control: Motion Menu
+## Reusing the Ender 3 S1 Screen for Home Assistant
+
+The goal is to repurpose the Ender 3 S1 screen for use with Home Assistant. The original screen was removed due to the Creality Sonic Pad. This screen is not a touchscreen but an LCD with an encoder and a buzzer.
+
+### Screen Details
+
+- **Screen Reference**: DACAI display
+  - Example Model: DC48270M043_1111_0N (RS232/TTL, no touch)
+  - [Alibaba Link](https://french.alibaba.com/product-detail/DACAI-4-3-inch-480-272-1600676495807.html)
+  - Other Example: DMG80480C043
+- **Interface**: UART (DOUT, DIN, 5V)
+- **SD Card**: Used to flash the microcontroller and load images.
+
+### Microcontroller Details
+
+- **µC Reference**: F1C100s
+  - [Datasheet](https://www.thirtythreeforty.net/media/F1C100s_Datasheet_V1.0.pdf)
+- **Devkit**: F1C100S with no touchscreen
+  - [Alibaba Link](https://www.alibaba.com/product-detail/SZSJW-PCB-multi-system-programming-learning_1601238807822.html?spm=a2700.galleryofferlist.normal_offer.d_title.1e3313a0oJpObs)
+
+### Screen Pinout
+
+The screen pinout is as follows:
+- **DOUT**: Data Out
+- **DIN**: Data In
+- **5V**: Power Supply
+- **GND**: Ground
+
+### Flashing the Screen
+
+The SD card is used to flash the microcontroller and load the required images for the display. Refer to the [GitHub repository](https://github.com/bustedlogic/DWIN_T5UIC1_LCD) for examples and instructions on flashing the screen.
+
+### Additional Resources
+
+- Example GitHub repository for LCD flashing: [bustedlogic/DWIN_T5UIC1_LCD](https://github.com/bustedlogic/DWIN_T5UIC1_LCD)
+- Example use case: DC48270M043_1111_0N (RS232/TTL, no touch)
+
+This project aims to integrate the screen with Home Assistant to display relevant information and control options.

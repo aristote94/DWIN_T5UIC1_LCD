@@ -3,6 +3,9 @@
 
 import RPi.GPIO as GPIO
 
+GPIO.setmode(GPIO.BCM)  # Or GPIO.BOARD depending on your pin numbering
+GPIO.setwarnings(False)
+
 class Encoder:
 
     def __init__(self, leftPin, rightPin, callback=None):

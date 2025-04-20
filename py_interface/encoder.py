@@ -1,8 +1,7 @@
 import RPi.GPIO as GPIO
-import time
 
-GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
 
 class Encoder:
 
@@ -14,32 +13,17 @@ class Encoder:
         self.direction = None
         self.callback = callback
 
-        print(f"[INIT] Encoder pins: left={self.leftPin}, right={self.rightPin}")
-        GPIO.cleanup()  # nettoyage complet avant config
-
+        GPIO.cleanup([self.leftPin, self.rightPin])  # nettoyage ciblé
         GPIO.setup(self.leftPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(self.rightPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-        try:
-            GPIO.remove_event_detect(self.leftPin)
-            GPIO.remove_event_detect(self.rightPin)
-        except RuntimeError:
-            pass  # ok si rien n’était défini avant
-
-        try:
-            GPIO.add_event_detect(self.leftPin, GPIO.BOTH, callback=self.transitionOccurred)
-            GPIO.add_event_detect(self.rightPin, GPIO.BOTH, callback=self.transitionOccurred)
-            print("[OK] Interruption ajoutée avec succès sur les deux pins")
-        except RuntimeError as e:
-            print(f"[ERREUR] Impossible d’ajouter les événements sur GPIO {self.leftPin}/{self.rightPin} : {e}")
-            print("👉 Vérifie que rien d'autre n'utilise ces pins ou que le script n’est pas déjà en cours")
-            raise
+        GPIO.add_event_detect(self.leftPin, GPIO.BOTH, callback=self.transitionOccurred)
+        GPIO.add_event_detect(self.rightPin, GPIO.BOTH, callback=self.transitionOccurred)
 
     def transitionOccurred(self, channel):
         p1 = GPIO.input(self.leftPin)
         p2 = GPIO.input(self.rightPin)
         newState = f"{p1}{p2}"
-        print(f"[ÉVÉNEMENT] GPIO {channel} — État : {self.state} → {newState}")
 
         if self.state == "00":
             if newState == "01":

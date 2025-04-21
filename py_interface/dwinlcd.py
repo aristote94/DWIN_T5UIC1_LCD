@@ -2,9 +2,7 @@ import time
 import multitimer
 import atexit
 
-from encoder import Encoder
 from RPi import GPIO
-
 from DWIN_Screen import T5UIC1_LCD
 
 
@@ -51,13 +49,11 @@ class DWIN_LCD:
     ICON_Info_0 = 90
     ICON_Info_1 = 91
 
-    def __init__(self, USARTx, encoder_pins, button_pin):
+    def __init__(self, USARTx, button_pin):
         GPIO.setmode(GPIO.BCM)
-        self.encoder = Encoder(encoder_pins[0], encoder_pins[1])
         self.button_pin = button_pin
         GPIO.setup(self.button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(self.button_pin, GPIO.BOTH, callback=self.encoder_has_data)
-        self.encoder.callback = self.encoder_has_data
+        GPIO.add_event_detect(self.button_pin, GPIO.BOTH, callback=self.button_callback)
         self.EncodeLast = 0
         self.EncodeMS = current_milli_time() + self.ENCODER_WAIT
         self.EncodeEnter = current_milli_time() + self.ENCODER_WAIT_ENTER
@@ -92,7 +88,8 @@ class DWIN_LCD:
         self.ICON_Control()
         self.ICON_StartInfo(self.select_page == 3)
 
-    def encoder_has_data(self, val):
+    def button_callback(self, channel):
+        # Remplacer les actions de l'encodeur par des actions liées au bouton
         if self.checkkey == self.MainMenu:
             self.HMI_MainMenu()
         elif self.checkkey == self.SelectFile:
